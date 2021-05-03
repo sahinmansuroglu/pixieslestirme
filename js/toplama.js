@@ -24,6 +24,8 @@ window.onload = function() {
     mainScreen = new PIXI.Container();
     app.renderer.autoResize = true;
     islemScreen = new PIXI.Container();
+    ornekScreen = new PIXI.Container();
+    ornekScreen.visible = false;
     //yeni bir resim ekleme
 
     bgSprite = new PIXI.Sprite.from("images/bg.png");
@@ -34,7 +36,11 @@ window.onload = function() {
     mainScreen.addChild(bgSprite);
     geriSprite = new PIXI.Sprite.from("images/geriSembol.png");
     ileriSprite = new PIXI.Sprite.from("images/ileriSembol.png");
+    anaSprite = new PIXI.Sprite.from("images/anaSayfaButon.png");
+    anaSprite.buttonMode = true;
+    anaSprite.interactive = true;
 
+    anaSprite.on("pointerdown", this.AnaMenuClick, this);
     geriSprite.anchor.set(0.5);
     geriSprite.x = 50;
     geriSprite.y = 50;
@@ -42,6 +48,10 @@ window.onload = function() {
     ileriSprite.anchor.set(0.5);
     ileriSprite.x = screenWidth - ileriSprite.width / 2 - 50;
     ileriSprite.y = 40;
+    anaSprite.anchor.set(0.5);
+    anaSprite.x = screenWidth / 2;
+    anaSprite.y = 40;
+    ornekScreen.addChild(anaSprite);
     mainScreen.addChild(geriSprite);
     mainScreen.addChild(ileriSprite);
     islemScreen.addChild(newText("Toplama İşlemi Etkinlikleri", 80, 228, 70))
@@ -52,6 +62,9 @@ window.onload = function() {
 
         islemScreen.addChild((new kutuluYazi(konumx, 220, 140, 200, 0X98B6E4, i, 130, false)).on("pointerdown", onTouchStartForClicking.bind(this)));
         islemScreen.addChild((new kutuluYazi(konumx, 450, 140, 200, 0X98B6E4, i + 5, 130, false)).on("pointerdown", onTouchStartForClicking.bind(this)));
+        islemScreen.addChild((new kutuluYazi(konumx, 220, 140, 200, 0X98B6E4, i, 130, false)).on("pointerdown", onTouchStartForClicking.bind(this)));
+        islemScreen.addChild((new kutuluYazi(konumx, 450, 140, 200, 0X98B6E4, i + 5, 130, false)).on("pointerdown", onTouchStartForClicking.bind(this)));
+
         konumx += 190;
     }
     mainScreen.addChild(islemScreen);
@@ -60,8 +73,18 @@ window.onload = function() {
 
 }
 
+function AnaMenuClick() {
+    for (var i = ornekScreen.children.length - 1; i >= 0; i--) { ornekScreen.removeChild(ornekScreen.children[i]); };
+
+    islemScreen.visible = true;
+
+    ornekScreen.visible = false
+        // alert("Tiklandı..");
+}
+
 function onTouchStartForClicking(e) {
 
+    // setTimeout(function() { alert("Hello"); }, 1000);
     console.log("Tamamdır:", e.target.icindekiYazi);
     zorluk = e.target.icindekiYazi;
     islemScreen.visible = false;
@@ -88,8 +111,10 @@ function resize() {
 
 
 function islemSahnesiAc() {
+
+    ornekScreen.addChild(anaSprite);
     secenekListe = [];
-    ornekScreen = new PIXI.Container();
+    ornekScreen.visible = true;
     rastgleDeger1 = Math.floor(Math.random() * zorluk) + 1;
     rastgleDeger2 = Math.floor(Math.random() * zorluk) + 1;
 
