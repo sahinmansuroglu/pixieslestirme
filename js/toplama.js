@@ -8,6 +8,8 @@ let bgSprite;
 let screenWidth = 1440;
 let screenHeight = 800;
 let zorluk;
+let cevapKutucuk;
+let cevap = 0;
 window.onload = function() {
     app = new PIXI.Application({
         width: screenWidth,
@@ -93,10 +95,14 @@ function islemSahnesiAc() {
 
     ornekScreen.addChild((new kutuluYazi(250, 200, 140, 200, 0X98B6E4, rastgleDeger1, 130, false)));
     ornekScreen.addChild((new kutuluYazi(500, 200, 140, 200, 0X98B6E4, rastgleDeger2, 130, false)));
+    ornekScreen.addChild((new kutuluYazi(250, 200, 140, 200, 0X98B6E4, rastgleDeger1, 130, false)));
+
+    cevapKutucuk = (new kutuluYazi(750, 200, 140, 200, 0XF1A7DC, "", 130, false))
+    ornekScreen.addChild(cevapKutucuk);
 
     ornekScreen.addChild(newText("+", 140, 400, 220));
     ornekScreen.addChild(newText("=", 140, 650, 220))
-
+    cevap = rastgleDeger1 + rastgleDeger2;
     secenekListe.push(rastgleDeger1 + rastgleDeger2);
     for (i = 1; i <= 5; i++) {
         secenekListe.push(Math.floor(Math.random() * 20) + 1);
@@ -107,7 +113,11 @@ function islemSahnesiAc() {
         const random = Math.floor(Math.random() * secenekListe.length); // [0,9)
         const id = secenekListe[random];
         secenekListe = secenekListe.filter(item => item != id);
-        ornekScreen.addChild((new kutuluYazi(konumx, 500, 140, 200, 0XF1A7DC, id, 130, true)));
+        secenekKutu = new kutuluYazi(konumx, 500, 140, 200, 0XF1A7DC, id, 130, false);
+        secenekKutu.on("pointerdown", this.onTouchStartForDragginng.bind(this));
+        secenekKutu.on("pointermove", this.onTouchMoveForDragginng.bind(this));
+        secenekKutu.on("pointerup", this.onTouchEndForDragginng.bind(this));
+        ornekScreen.addChild(secenekKutu);
         konumx += 180;
     }
     // kutuluYaziObj = new kutuluYazi(konumx, 400, 120, 180, 0X98B6E4, i, 110, false);
@@ -122,4 +132,73 @@ function islemSahnesiAc() {
     // ornekScreen.addChild(kutuluYaziObj);
 
     mainScreen.addChild(ornekScreen);
+}
+
+// Burada current target olarak  almamız gerekiyor
+
+function onTouchStartForDragginng(e) {
+    const target = e.currentTarget;
+    target.oldX = target.x;
+    target.oldY = target.y;
+    // console.log("Tiklandi..:", e.target);
+
+    target.dragging = true;
+    //target.dragValue1(true);
+    e.target.alpha = 0.3;
+}
+
+function onTouchMoveForDragginng(e) {
+    const target = e.currentTarget;
+    // console.log("Tiklandi..:", target.dragging)
+    if (!target.dragging) return;
+
+    //console.log(e.data.global.x, e.data.global.y);
+
+    //1. get the coordinates of the cursor
+
+    //2. calculate the offset 
+    //const offsetX = currentPosition.x - player.touchPosition.x;
+    //const offsetY = currentPosition.y - player.touchPosition.y;
+    //3. apply the resulting offset
+
+    target.x = e.data.global.x - 60;
+    target.y = e.data.global.y - 90;
+
+    collisionTest(target, cevapKutucuk)
+        //player.dragging = true;
+
+}
+
+function onTouchEndForDragginng(e) {
+    const target = e.currentTarget;
+    target.alpha = 0.8;
+    target.dragging = false;
+    //target.dragValue1(false)
+    //alert(target.sag);
+    //console.log("ddddd:", );
+    //player.dragging = true;
+    target.x = target.oldX;
+    target.y = target.oldY;
+}
+
+function collisionTest(from, to) {
+    x = (to.sol + to.sag) / 2;
+    y = (to.alt + to.ust) / 2;
+
+    x1 = (from.sol + from.sag) / 2;
+    y1 = (from.alt + from.ust) / 2;
+    test = x >= from.sol && x <= from.sag &&
+        y <= from.alt && y >= from.ust;
+
+    if (test) {
+        to.alpha = 0.3;
+        if (cevap == from.icindekiYazi) {
+            ornekScreen.removeChild(from);
+            to.text.text = cevap;
+            to.alpha = 1;
+        }
+
+    } else
+        to.alpha = 1;
+    console.log("Carpisti");
 }

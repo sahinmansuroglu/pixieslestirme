@@ -17,51 +17,24 @@ class kutuluYazi extends PIXI.Container {
         this.x = x;
         this.y = y;
         this.interactive = true;
-        if (draggable) {
-            this.on("pointerdown", this.onTouchStartForDragginng, this)
-            this.on("pointermove", this.onTouchMoveForDragginng, this);
-            this.on("pointerup", this.onTouchEndForDragginng, this);
-            this.alpha = 0.8;
-        }
-
         console.log("Boyutlar:", this.width, " ", this.height);
-    };
-    onTouchStartForClicking(e) {
-        console.log("Tiklandi..:", this.icindekiYazi);
-        parentScreen1.visible = false;
-    }
-    onTouchStartForDragginng(e) {
-        console.log("Tiklandi..");
-        this.dragging = true;
-        this.alpha = 0.1;
-    }
-    onTouchMoveForDragginng(e) {
-        if (!this.dragging)
-            return;
-
-        console.log(e.data.global.x, e.data.global.y);
-
-        //1. get the coordinates of the cursor
-
-        //2. calculate the offset 
-        //const offsetX = currentPosition.x - player.touchPosition.x;
-        //const offsetY = currentPosition.y - player.touchPosition.y;
-        //3. apply the resulting offset
-
-        this.x = e.data.global.x - 60;
-        this.y = e.data.global.y - 90;
-        //player.dragging = true;
-
+        this.dragging = draggable;
+        this.oldX = 0;
+        this.oldY = 0;
     }
 
-    onTouchEndForDragginng(e) {
-        this.alpha = 0.8;
-        this.dragging = false;
-
-        console.log("Bırakıldı");
-        //player.dragging = true;
-
+    get sol() {
+        return this.x;
+    }
+    get sag() {
+        return this.x + this.width;
+    }
+    get ust() {
+        return this.y;
+    }
+    get alt() {
+        return this.y + this.height;
     }
 
 
-};
+}
