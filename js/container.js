@@ -1,19 +1,27 @@
-class kutuluYazi extends PIXI.Container {
-    constructor(x, y, genislik, yukseklik, dolguRengi, icindekiYazi, yaziBoyutu, draggable) {
+class kutu extends PIXI.Container {
+    constructor(x, y, genislik, yukseklik, dolguRengi, draggable, opacity, resim = null, value = null) {
         super();
 
-        this.icindekiYazi = icindekiYazi;
+        this.value = value;
         //this.anchor.set(0.5);
         this.kutucuk = new PIXI.Graphics();
         this.kutucuk.beginFill(dolguRengi);
         this.kutucuk.drawRect(0, 0, genislik, yukseklik);
+        this.kutucuk.alpha = opacity;
+        this.image = null;
 
 
-        this.text = newText(icindekiYazi, yaziBoyutu, 30, 25);
-        if (icindekiYazi >= 10)
-            this.text.x = -10;
+
         this.addChild(this.kutucuk);
-        this.addChild(this.text);
+        if (resim != null) {
+            this.image = new PIXI.Sprite.from(resim);
+            this.image.x = 0;
+            this.image.y = 0;
+            this.image.width = genislik;
+            this.image.height = yukseklik;
+            this.image.alpha = opacity;
+            this.addChild(this.image);
+        }
         this.x = x;
         this.y = y;
         this.interactive = true;

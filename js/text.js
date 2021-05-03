@@ -1,4 +1,5 @@
-function newText(icindekiYazi, boyut, x, y) {
+function newText(icindekiYazi, boyut, container = null) {
+    textContainer = new PIXI.Container();
     let style = new PIXI.TextStyle({
         fontFamily: "Arial",
         fontSize: boyut,
@@ -12,7 +13,13 @@ function newText(icindekiYazi, boyut, x, y) {
         dropShadowDistance: 6,
     });
     let text = new PIXI.Text(icindekiYazi, style);
-    text.x = x;
-    text.y = y;
-    return text
+    textContainer.addChild(text);
+    if (container != null) {
+
+        textContainer.x = (container.width - textContainer.width) / 2;
+        textContainer.y = (container.height - textContainer.height) / 2;;
+    }
+
+
+    return textContainer
 }
