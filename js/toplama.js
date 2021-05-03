@@ -6,7 +6,7 @@ let islemScreen;
 let ornekScreen;
 let bgSprite;
 let screenWidth = 1440;
-let screenHeight = 800;
+let screenHeight = 750;
 let zorluk;
 let cevapKutucuk;
 let cevap = 0;
